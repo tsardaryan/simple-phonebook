@@ -5,6 +5,11 @@
 	</head>
 	<body>
 		<p><a class="pure-button pure-button-primary" href="/">Back To List</a></p>
+		<?php if(isset($messages["success"])): ?>
+			<p class="success"><?php echo $messages["success"][0]; ?></p>
+		<?php elseif(isset($messages["error"])): ?>
+			<p class="error"><?php echo $messages["error"][0]; ?></p>
+		<?php endif; ?>
 		<form class="pure-form pure-form-stacked" method="POST" enctype="multipart/form-data">
 			<fieldset>
 				<legend>Add New User</legend>

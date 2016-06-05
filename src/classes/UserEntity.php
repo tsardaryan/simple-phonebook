@@ -5,8 +5,8 @@ class UserEntity
     private $id = 0;
     private $full_name;
     private $phone_number;
-    private $birthday;
-    private $address;
+    private $birthday = null;
+    private $address = null;
    
     public function __construct(array $data)
 	{
@@ -16,8 +16,14 @@ class UserEntity
         }
         $this->full_name = $data['full_name'];
         $this->phone_number = $data['phone_number'];
-        $this->birthday = $data['birthday'];
-        $this->address = $data['address'];
+		if($data['birthday'] != "")
+		{
+			$this->birthday = $data['birthday'];
+		}
+		if($data['address'] != "")
+		{
+			$this->address = $data['address'];
+		}
     }
     public function getId()
 	{

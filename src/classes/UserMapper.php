@@ -138,7 +138,7 @@ class UserMapper extends Mapper
             FROM
 				users
 			WHERE
-				id_user = :id_user
+				id = :id_user
 			";
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute(["id_user" => $id_user]);

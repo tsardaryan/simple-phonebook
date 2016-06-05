@@ -44,13 +44,12 @@ $app->get('/', function (Request $request, Response $response) {
 	}
 	$messages = $this->flash->getMessages();
 	
-    $response = $this->view->render($response, "users.phtml", ["q" => $q, "users" => $users, "router" => $this->router, "messages" => $messages]);
-    return $response;
+    return $this->view->render($response, "users.phtml", ["q" => $q, "users" => $users, "router" => $this->router, "messages" => $messages]);
 });
 
 $app->get('/users/new', function (Request $request, Response $response) {
-    $response = $this->view->render($response, "new_user.phtml");
-    return $response;
+	$messages = $this->flash->getMessages();
+    return  $this->view->render($response, "new_user.phtml", ["messages" => $messages]);
 });
 
 $app->post('/users/new', function (Request $request, Response $response) {
@@ -70,7 +69,8 @@ $app->post('/users/new', function (Request $request, Response $response) {
 		
 		if($user_mapper->isPhoneNumberExists($user->getId(), $user->getPhoneNumber()))
 		{
-			$this->flash->addMessage('error', 'Phone Number already exists');
+			$this->flash->addMessage('error', 'Phone Number already exists');		
+			return $response->withRedirect("/users/new");
 		}
 		else
 		{
@@ -94,10 +94,10 @@ $app->post('/users/new', function (Request $request, Response $response) {
 	catch(Exception $e)
 	{
 		$this->flash->addMessage('error', "Incorrect Values");
+		return $response->withRedirect("/users/new");
 	}
 	
-	$response = $response->withRedirect("/");
-    return $response;
+	return $response->withRedirect("/");
 });
 
 $app->get('/users/{id}', function (Request $request, Response $response, $args) {
@@ -107,8 +107,7 @@ $app->get('/users/{id}', function (Request $request, Response $response, $args) 
 	
 	$messages = $this->flash->getMessages();
 	
-    $response = $this->view->render($response, "user.phtml", ["user" => $user, "messages" => $messages]);
-    return $response;
+	return $this->view->render($response, "user.phtml", ["user" => $user, "messages" => $messages]);
 });
 
 $app->put('/users/{id}', function (Request $request, Response $response, $args) {
@@ -157,8 +156,7 @@ $app->put('/users/{id}', function (Request $request, Response $response, $args) 
 		$this->flash->addMessage('error', "Incorrect Values");
 	}
 	
-    $response = $response->withRedirect("/users/$id_user");
-    return $response;
+    return $response->withRedirect("/users/$id_user");
 });
 
 $app->delete('/users/{id}', function (Request $request, Response $response, $args) {
@@ -167,13 +165,14 @@ $app->delete('/users/{id}', function (Request $request, Response $response, $arg
 		$id_user = (int)$args['id'];
 		$mapper = new UserMapper($this->db);
 		$mapper->remove($id_user);
+		
+		$this->flash->addMessage('success', "User Deleted Successfully");
 	}
 	catch(Exception $e)
 	{
 		$this->flash->addMessage('error', "Incorrect Values");
 	}
-    $response = $response->withRedirect("/users/$id_user");
-    return $response;
+    return  $response->withRedirect("/");
 });
 
 $app->run();
