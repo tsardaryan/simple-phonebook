@@ -80,6 +80,10 @@ $app->post('/users/new', function (Request $request, Response $response) {
 				$avatar = $files['avatar'];
 				if($avatar->getError() === UPLOAD_ERR_OK)
 				{
+					if (!is_dir("images/"))
+					{
+						mkdir("images/");         
+					}
 					$avatar->moveTo("images/".$id_user);
 				}
 			}
@@ -137,6 +141,10 @@ $app->put('/users/{id}', function (Request $request, Response $response, $args) 
 				$avatar = $files['avatar'];
 				if($avatar->getError() === UPLOAD_ERR_OK)
 				{
+					if (!is_dir("images/"))
+					{
+						mkdir("images/");         
+					}
 					$avatar->moveTo("images/".$id_user);
 				}
 			}
